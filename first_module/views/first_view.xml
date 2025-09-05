@@ -75,16 +75,28 @@
         </field>
     </record>
 
+    <record id="view_first_model_graph" model="ir.ui.view">
+    <field name="name">first.model.graph</field>
+    <field name="model">first.model</field>
+    <field name="arch" type="xml">
+        <graph string="First Model Graph" type="bar">
+            <field name="check_all" type="row"/>
+            <field name="check1" type="row"/>
+        </graph>
+    </field>
+</record>
+
     <record id="action_first_model" model="ir.actions.act_window">
     <field name="name">First Model</field>
     <field name="res_model">first.model</field>
-    <field name="view_mode">kanban,list,form,pivot</field>
+    <field name="view_mode">kanban,list,form,pivot,graph</field>
     <field name="view_ids" eval="[
         (5, 0, 0),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_first_model_kanban')}),
         (0, 0, {'view_mode': 'list', 'view_id': ref('view_first_model_list')}),
         (0, 0, {'view_mode': 'form', 'view_id': ref('view_first_model_form')}),
         (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_first_model_pivot')}),
+        (0, 0, {'view_mode': 'graph', 'view_id': ref('view_first_model_graph')}),
     ]"/>
     <field name="target">current</field>
 </record>
