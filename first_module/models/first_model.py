@@ -30,13 +30,21 @@ class FirstModel(models.Model):
     boolean7 = fields.Boolean(string='7')
     boolean8 = fields.Boolean(string='8')
     boolean9 = fields.Boolean(string='9')
-    check_all_int = fields.Integer(string='Check All as Integer', compute='_compute_check_all_int')
+    check_all_int = fields.Integer(string='Check All as Integer', compute='_compute_check_all_int',
+                                   inverse='_inverse_check_boxes',store=True)
 
     @api.depends('check_all')
     def _compute_check_all_int(self):
         """compute check_all row from bool to int and write result in new the row"""
         for rec in self:
             rec.check_all_int = 1 if rec.check_all else 0
+
+    def _inverse_check_boxes(self):
+        """inverse method to change check1 check2 inputs"""
+        for rec in self:
+            flag = bool(rec.check_all_int)
+            rec.check1 = not flag
+            rec.check2 = not flag
 
     @api.constrains('text')
     def _check_text_len(self):
