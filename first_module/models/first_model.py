@@ -1,5 +1,4 @@
-from odoo import models, fields
-
+from odoo import models, fields, api
 
 
 class FirstModel(models.Model):
@@ -30,3 +29,9 @@ class FirstModel(models.Model):
     boolean7 = fields.Boolean(string='7')
     boolean8 = fields.Boolean(string='8')
     boolean9 = fields.Boolean(string='9')
+    check_all_int = fields.Integer(string='Check All as Integer', compute='_compute_check_all_int')
+
+    @api.depends('check_all')
+    def _compute_check_all_int(self):
+        for rec in self:
+            rec.check_all_int = 1 if rec.check_all else 0
