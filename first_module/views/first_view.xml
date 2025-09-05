@@ -1,0 +1,43 @@
+<odoo>
+    <record id="view_first_model_form" model="ir.ui.view">
+        <field name="name">first.model.form</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <form string="First Model Form">
+                <sheet>
+                    <group>
+                        <field name="text"/>
+                        <field name="check1"/>
+                        <field name="check2"/>
+                        <field name="check_all"/>
+                        <field name="select1"/>
+                        <field name="select2"/>
+                    </group>
+                    <group string="Booleans">
+                        <field name="boolean1"/>
+                        <field name="boolean2"/>
+                        <field name="boolean3"/>
+                        <field name="boolean4"/>
+                        <field name="boolean5"/>
+                        <field name="boolean6"/>
+                        <field name="boolean7"/>
+                        <field name="boolean8"/>
+                        <field name="boolean9"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_first_model_form" model="ir.actions.act_window">
+        <field name="name">First Model</field>
+        <field name="res_model">first.model</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_first_model_form"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_first_model_root" name="First Model"/>
+
+    <menuitem id="menu_first_model_form" name="Open Form" parent="menu_first_model_root" action="action_first_model_form"/>
+</odoo>
