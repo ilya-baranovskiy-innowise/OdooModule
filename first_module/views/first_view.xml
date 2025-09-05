@@ -29,15 +29,37 @@
         </field>
     </record>
 
-    <record id="action_first_model_form" model="ir.actions.act_window">
+    <record id="view_first_model_kanban" model="ir.ui.view">
+        <field name="name">first.model.kanban</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <field name="text"/>
+                            <div>
+                                <field name="check_all"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_first_model" model="ir.actions.act_window">
         <field name="name">First Model</field>
         <field name="res_model">first.model</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_first_model_form"/>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_first_model_kanban')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_first_model_form')})
+        ]"/>
         <field name="target">current</field>
     </record>
 
     <menuitem id="menu_first_model_root" name="First Model"/>
-
-    <menuitem id="menu_first_model_form" name="Open Form" parent="menu_first_model_root" action="action_first_model_form"/>
+    <menuitem id="menu_first_model_kanban" name="Kanban View" parent="menu_first_model_root" action="action_first_model"/>
 </odoo>
