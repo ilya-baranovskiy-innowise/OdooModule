@@ -10,10 +10,8 @@
                         <field name="check1"/>
                         <field name="check2"/>
                         <field name="check_all"/>
-                        <field name="select1"/>
-                        <field name="select2"/>
                     </group>
-                    <group string="Booleans">
+                    <group string="Booleans" invisible="menu_visible">
                         <field name="boolean1"/>
                         <field name="boolean2"/>
                         <field name="boolean3"/>
@@ -49,20 +47,20 @@
     </record>
 
     <record id="view_first_model_list" model="ir.ui.view">
-    <field name="name">first.model.list</field>
-    <field name="model">first.model</field>
-    <field name="arch" type="xml">
-        <list string="First Model List">
-            <field name="text"/>
-            <field name="check_all"/>
-            <field name="boolean1"/>
-            <field name="boolean2"/>
-            <field name="boolean3"/>
-            <field name="boolean4"/>
-            <field name="check_all_int"/>
-        </list>
-    </field>
-</record>
+        <field name="name">first.model.list</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <list string="First Model List">
+                <field name="text"/>
+                <field name="check_all"/>
+                <field name="boolean1"/>
+                <field name="boolean2"/>
+                <field name="boolean3"/>
+                <field name="boolean4"/>
+                <field name="check_all_int"/>
+            </list>
+        </field>
+    </record>
 
     <record id="view_first_model_pivot" model="ir.ui.view">
         <field name="name">first.model.pivot</field>
@@ -76,21 +74,21 @@
     </record>
 
     <record id="view_first_model_graph" model="ir.ui.view">
-    <field name="name">first.model.graph</field>
-    <field name="model">first.model</field>
-    <field name="arch" type="xml">
-        <graph string="First Model Graph" type="bar">
-            <field name="check_all" type="row"/>
-            <field name="check1" type="row"/>
-        </graph>
-    </field>
-</record>
+        <field name="name">first.model.graph</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <graph string="First Model Graph" type="bar">
+                <field name="check_all" type="row"/>
+                <field name="check1" type="row"/>
+            </graph>
+        </field>
+    </record>
 
     <record id="action_first_model" model="ir.actions.act_window">
-    <field name="name">First Model</field>
-    <field name="res_model">first.model</field>
-    <field name="view_mode">kanban,list,form,pivot,graph</field>
-    <field name="view_ids" eval="[
+        <field name="name">First Model</field>
+        <field name="res_model">first.model</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="view_ids" eval="[
         (5, 0, 0),
         (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_first_model_kanban')}),
         (0, 0, {'view_mode': 'list', 'view_id': ref('view_first_model_list')}),
@@ -98,9 +96,10 @@
         (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_first_model_pivot')}),
         (0, 0, {'view_mode': 'graph', 'view_id': ref('view_first_model_graph')}),
     ]"/>
-    <field name="target">current</field>
-</record>
+        <field name="target">current</field>
+    </record>
 
     <menuitem id="menu_first_model_root" name="First Model"/>
-    <menuitem id="menu_first_model_kanban" name="Kanban View" parent="menu_first_model_root" action="action_first_model"/>
+    <menuitem id="menu_first_model_kanban" name="Kanban View" parent="menu_first_model_root"
+              action="action_first_model"/>
 </odoo>

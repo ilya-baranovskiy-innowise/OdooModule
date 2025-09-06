@@ -2,7 +2,6 @@ from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
 
-
 class FirstModel(models.Model):
     _name = "first.model"
     _description = 'It is my first model'
@@ -62,6 +61,13 @@ class FirstModel(models.Model):
         string='Reference'
     )
     json_data = fields.Json(string='Json data')
+    menu_visible = fields.Boolean(default=True, compute='_compute_menu_visible', store=True)
+
+    @api.depends('target_datetime')
+    def _compute_menu_visible(self):
+        for rec in self:
+            if rec.menu_visible:
+                rec.menu_visible = False
 
     @api.depends('check_all')
     def _compute_check_all_int(self):
