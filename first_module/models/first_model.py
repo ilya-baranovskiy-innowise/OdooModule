@@ -37,9 +37,6 @@ class FirstModel(models.Model):
         ('6', '6')
     ])
 
-    # digit fields
-    # check_all_int = fields.Integer(string='Check All as Integer', compute='_compute_check_all_int',
-    # inverse='_inverse_check_boxes', store=True)
     amount = fields.Float(string='Amount')
     price = fields.Monetary(string='Price', currency_field='currency_id')
 
@@ -62,23 +59,43 @@ class FirstModel(models.Model):
     )
     json_data = fields.Json(string='Json data')
     menu_visible = fields.Boolean(default=True, compute='_compute_menu_visible', store=True)
+    checked_order = fields.Char(string='Checked Order', default='')
 
     @api.onchange('check_all')
     def _onchange_check_all(self):
-        if self.check_all:
-            self.check1 = True
-            self.check2 = True
-        else:
-            self.check1 = False
-            self.check2 = False
+        """check check_all box"""
+        for rec in self:
+            if rec.check_all:
+                rec.check1 = True
+                rec.check2 = True
+            else:
+                rec.check1 = False
+                rec.check2 = False
 
     @api.onchange('check1', 'check2')
     def _onchange_check1_check2(self):
-        if self.check1 and self.check2:
-            self.check_all = True
-        else:
-            if self.check_all:
-                self.check_all = False
+        """check check_all box and add text to text field"""
+        order = self.checked_order.split(',') if self.checked_order else []
+
+        def update_order(checkbox_id, checked):
+            if checked and checkbox_id not in order:
+                order.append(checkbox_id)
+            elif not checked and checkbox_id in order:
+                order.remove(checkbox_id)
+
+        update_order('check1', self.check1)
+        update_order('check2', self.check2)
+
+        self.checked_order = ','.join(order)
+
+        parts = []
+        for cb in order:
+            if cb == 'check1':
+                parts.append(f'[{self._fields["check1"].string}]')
+            elif cb == 'check2':
+                parts.append(f'{{{self._fields["check2"].string}}}')
+
+        self.text = ' '.join(parts)
 
     @api.depends('target_datetime')
     def _compute_menu_visible(self):
@@ -86,35 +103,3 @@ class FirstModel(models.Model):
         for rec in self:
             if rec.menu_visible:
                 rec.menu_visible = False
-
-    """@api.depends('check_all')
-    def _compute_check_all_int(self):
-        ""compute check_all row from bool to int and write result in new the row""
-        for rec in self:
-            rec.check_all_int = 1 if rec.check_all else 0
-
-    def _inverse_check_boxes(self):
-        ""inverse method to change check1 check2 inputs""
-        for rec in self:
-            flag = bool(rec.check_all_int)
-            rec.check1 = not flag
-            rec.check2 = not flag
-
-    @api.constrains('text')
-    def _check_text_len(self):
-        ""check text length""
-        for record in self:
-            if not record.text or len(record.text) < 5:
-                raise ValidationError("Short text")
-
-    @api.onchange('text')
-    def _check_text_len_before_save(self):
-        ""check text length before save""
-        for record in self:
-            if not record.text or len(record.text) < 5:
-                return {
-                    'warning': {
-                        'title': "Error",
-                        'message': "Short text len",
-                    }
-                }"""

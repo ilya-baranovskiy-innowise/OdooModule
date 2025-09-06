@@ -6,7 +6,7 @@
             <form string="First Model Form">
                 <sheet>
                     <group>
-                        <field name="text"/>
+                        <field name="text" readonly="1"/>
                         <field name="check1"/>
                         <field name="check2"/>
                         <field name="check_all"/>
