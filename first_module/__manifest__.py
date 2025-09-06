@@ -9,6 +9,7 @@
     """,
     'data': [
         'views/first_view.xml',
+        'views/wizard_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,

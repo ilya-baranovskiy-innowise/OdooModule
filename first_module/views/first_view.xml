@@ -7,6 +7,7 @@
                 <header>
                     <button name="action_create_person" type="object" string="Create Person" class="oe_highlight" invisible="person_show"/>
                     <button name="action_create_company" type="object" string="Create Company" class="oe_highlight" invisible="company_show"/>
+                    <button name="action_create_partner" type="object" string="Create Partner" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <group>

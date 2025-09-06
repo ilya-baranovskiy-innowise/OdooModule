@@ -79,6 +79,7 @@ class FirstModel(models.Model):
 
     @api.depends('is_company')
     def _compute_buttons_visibility(self):
+        """function to check buttons visibility in header"""
         for rec in self:
             if rec.is_company:
                 rec.person_show = False
@@ -87,7 +88,19 @@ class FirstModel(models.Model):
                 rec.person_show = True
                 rec.company_show = False
 
+    def action_create_partner(self):
+        """function to open new window after create partner record"""
+        return {
+            'name': 'Create Partner',
+            'type': 'ir.actions.act_window',
+            'res_model': 'create.partner.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': self.env.context,
+        }
+
     def action_create_person(self):
+        """function to create person record"""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -102,6 +115,7 @@ class FirstModel(models.Model):
         }
 
     def action_create_company(self):
+        """function to create company record"""
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
@@ -117,6 +131,7 @@ class FirstModel(models.Model):
 
     @api.onchange('select1', 'select2')
     def _change_bool_visible(self):
+        """function to boolean visibility witch depends on select digit on the form"""
         visible_fields = set()
 
         select1_dict = {
