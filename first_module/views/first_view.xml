@@ -4,11 +4,16 @@
         <field name="model">first.model</field>
         <field name="arch" type="xml">
             <form string="First Model Form">
+                <header>
+                    <button name="action_create_person" type="object" string="Create Person" class="oe_highlight" invisible="person_show"/>
+                    <button name="action_create_company" type="object" string="Create Company" class="oe_highlight" invisible="company_show"/>
+                </header>
                 <sheet>
                     <group>
                         <field name="text" readonly="1"/>
                         <field name="check1"/>
                         <field name="check2"/>
+                        <field name="is_company"/>
                         <field name="check_all"/>
                         <field name="select1"/>
                         <field name="select2"/>

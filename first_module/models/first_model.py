@@ -8,7 +8,7 @@ class FirstModel(models.Model):
 
     # text field
     text = fields.Text(string='Text')
-    name = fields.Char(string='Name')
+    name = fields.Text(string='Name')
     html_content = fields.Html(string='HTML content')
 
     # bool fields
@@ -34,6 +34,12 @@ class FirstModel(models.Model):
     show_boolean7 = fields.Boolean(string='show bool 7', compute=False, store=False, default=True)
     show_boolean8 = fields.Boolean(string='show bool 8', compute=False, store=False, default=True)
     show_boolean9 = fields.Boolean(string='show bool 9', compute=False, store=False, default=True)
+
+    is_company = fields.Boolean(string='Is company ?', default=True)
+    person_show = fields.Boolean(string='Person button show', default=False, compute='_compute_buttons_visibility',
+                                 store=False)
+    company_show = fields.Boolean(string='Company button show', default=False, compute='_compute_buttons_visibility',
+                                  store=False)
 
     # selections fields
     select1 = fields.Selection([
@@ -70,6 +76,44 @@ class FirstModel(models.Model):
     json_data = fields.Json(string='Json data')
     menu_visible = fields.Boolean(default=True, compute='_compute_menu_visible', store=True)
     checked_order = fields.Char(string='Checked Order', default='')
+
+    @api.depends('is_company')
+    def _compute_buttons_visibility(self):
+        for rec in self:
+            if rec.is_company:
+                rec.person_show = False
+                rec.company_show = True
+            else:
+                rec.person_show = True
+                rec.company_show = False
+
+    def action_create_person(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Person',
+            'res_model': 'res.partner',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': self.text or '',
+                'default_is_company': False,
+            },
+        }
+
+    def action_create_company(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Create Company',
+            'res_model': 'res.partner',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_name': self.text or '',
+                'default_is_company': True,
+            },
+        }
 
     @api.onchange('select1', 'select2')
     def _change_bool_visible(self):
