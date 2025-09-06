@@ -25,6 +25,16 @@ class FirstModel(models.Model):
     boolean8 = fields.Boolean(string='8')
     boolean9 = fields.Boolean(string='9')
 
+    show_boolean1 = fields.Boolean(string='show bool 1', compute=False, store=False, default=True)
+    show_boolean2 = fields.Boolean(string='show bool 2', compute=False, store=False, default=True)
+    show_boolean3 = fields.Boolean(string='show bool 3', compute=False, store=False, default=True)
+    show_boolean4 = fields.Boolean(string='show bool 4', compute=False, store=False, default=True)
+    show_boolean5 = fields.Boolean(string='show bool 5', compute=False, store=False, default=True)
+    show_boolean6 = fields.Boolean(string='show bool 6', compute=False, store=False, default=True)
+    show_boolean7 = fields.Boolean(string='show bool 7', compute=False, store=False, default=True)
+    show_boolean8 = fields.Boolean(string='show bool 8', compute=False, store=False, default=True)
+    show_boolean9 = fields.Boolean(string='show bool 9', compute=False, store=False, default=True)
+
     # selections fields
     select1 = fields.Selection([
         ('1', '1'),
@@ -60,6 +70,32 @@ class FirstModel(models.Model):
     json_data = fields.Json(string='Json data')
     menu_visible = fields.Boolean(default=True, compute='_compute_menu_visible', store=True)
     checked_order = fields.Char(string='Checked Order', default='')
+
+    @api.onchange('select1', 'select2')
+    def _change_bool_visible(self):
+        visible_fields = set()
+
+        select1_dict = {
+            '1': ['1', '2', '3'],
+            '2': ['4', '5', '6'],
+            '3': ['7', '8', '9']
+        }
+
+        select2_dict = {
+            '4': ['1', '4', '7'],
+            '5': ['2', '5', '8'],
+            '6': ['3', '6', '9']
+        }
+        if self.select1 in select1_dict:
+            visible_fields.update(select1_dict[self.select1])
+        if self.select2 in select2_dict:
+            visible_fields.update(select2_dict[self.select2])
+
+        for i in range(1, 10):
+            setattr(self, f'show_boolean{i}', True)
+
+        for i in visible_fields:
+            setattr(self, f'show_boolean{i}', False)
 
     @api.onchange('check_all')
     def _onchange_check_all(self):
