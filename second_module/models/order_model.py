@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class MyOrder(models.Model):
@@ -17,17 +17,20 @@ class MyOrder(models.Model):
     is_confirm = fields.Boolean(String='Confirm')
 
     def action_confirm(self):
+        """change status on confirm button"""
         for order in self:
             order.is_draft = False
             order.is_confirm = True
 
     def action_set_draft(self):
+        """change status on draft button"""
         for order in self:
             order.is_draft = True
             order.is_confirm = False
 
     @api.depends('order_line.quantity', 'order_line.unit_price', 'order_line.discount')
     def _compute_summary(self):
+        """logic to calculate total sums in summary block"""
         for order in self:
             total_qty = 0.0
             total_amt = 0.0
@@ -57,20 +60,37 @@ class MyOrderLine(models.Model):
     is_confirm = fields.Boolean(string='Is Confirmed', related='order_id.is_confirm', store=True)
     is_draft = fields.Boolean(string='Is Draft', related='order_id.is_draft', store=True)
 
+    @api.constrains('quantity', 'discount', 'unit_price')
+    def _check_positive_number(self):
+        """check positive number by saving record"""
+        for rec in self:
+            if rec.quantity < 0 or rec.discount < 0 or rec.unit_price < 0:
+                raise ValidationError(f'Digit parameter in {rec.product_name} line must be positive')
+
+    @api.onchange('quantity', 'discount', 'unit_price')
+    def _check_positive_number_before(self):
+        """check positive numbre before saving in UI"""
+        for rec in self:
+            if rec.quantity < 0 or rec.discount < 0 or rec.unit_price < 0:
+                raise ValidationError(f'Digit parameter in {rec.product_name} line must be positive')
+
     @api.depends('discount', 'unit_price', 'quantity')
     def _compute_line_discount(self):
+        """calculate line discount"""
         for rec in self:
             rec.result_price = rec.quantity * rec.unit_price * (1 - rec.discount / 100)
 
     @api.model
     def create(self, vals):
+        """check status and create line or return error"""
         order = self.env['my.order'].browse(vals.get('order_id'))
         if order.is_confirm:
-            raise UserError("Error")
+            raise UserError("Error by creating line in confirm status")
         return super().create(vals)
 
     def unlink(self):
+        """check status and remove line or return error to user"""
         for line in self:
             if line.order_id.is_confirm:
-                raise UserError("Error")
+                raise UserError("Error by removing in confirm status")
         return super().unlink()
