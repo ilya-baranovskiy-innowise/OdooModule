@@ -52,9 +52,15 @@ class MyOrderLine(models.Model):
     quantity = fields.Float(string='Quantity', default=1.0)
     unit_price = fields.Float(string='Unit Price', default=0.0)
     discount = fields.Float(string='Discount %', default=0.0)
+    result_price = fields.Float(string='Result price', store=True, compute='_compute_line_discount')
 
     is_confirm = fields.Boolean(string='Is Confirmed', related='order_id.is_confirm', store=True)
     is_draft = fields.Boolean(string='Is Draft', related='order_id.is_draft', store=True)
+
+    @api.depends('discount', 'unit_price', 'quantity')
+    def _compute_line_discount(self):
+        for rec in self:
+            rec.result_price = rec.quantity * rec.unit_price * (1 - rec.discount / 100)
 
     @api.model
     def create(self, vals):
@@ -62,7 +68,6 @@ class MyOrderLine(models.Model):
         if order.is_confirm:
             raise UserError("Error")
         return super().create(vals)
-
 
     def unlink(self):
         for line in self:
