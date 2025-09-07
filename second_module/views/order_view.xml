@@ -15,6 +15,10 @@
         <field name="model">my.order</field>
         <field name="arch" type="xml">
             <form string="Order">
+                <button name="action_confirm" string="Confirm" type="object"
+                        invisible="is_confirm" class="btn-primary"/>
+                <button name="action_set_draft" string="Set to Draft" type="object"
+                        invisible="is_draft" class="btn-secondary"/>
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -23,17 +27,17 @@
                         <page string="Order Lines">
                             <field name="order_line" mode="list,form">
                                 <list>
-                                    <field name="product_name"/>
-                                    <field name="quantity"/>
-                                    <field name="unit_price"/>
+                                    <field name="product_name" readonly="is_confirm"/>
+                                    <field name="quantity" readonly="is_confirm"/>
+                                    <field name="unit_price" readonly="is_confirm"/>
                                     <field name="discount"/>
                                 </list>
                                 <form>
                                     <sheet>
                                         <group>
-                                            <field name="product_name"/>
-                                            <field name="quantity"/>
-                                            <field name="unit_price"/>
+                                            <field name="product_name" readonly="is_confirm"/>
+                                            <field name="quantity" readonly="is_confirm"/>
+                                            <field name="unit_price" readonly="is_confirm"/>
                                             <field name="discount"/>
                                         </group>
                                     </sheet>

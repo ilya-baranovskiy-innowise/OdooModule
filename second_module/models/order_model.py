@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class MyOrder(models.Model):
@@ -11,6 +12,19 @@ class MyOrder(models.Model):
     total_quantity = fields.Float(string='Total Quantity', compute='_compute_summary', store=True)
     total_amount = fields.Float(string='Total Amount', compute='_compute_summary', store=True)
     average_discount = fields.Float(string='Average Discount %', compute='_compute_summary', store=True)
+
+    is_draft = fields.Boolean(String='Draft')
+    is_confirm = fields.Boolean(String='Confirm')
+
+    def action_confirm(self):
+        for order in self:
+            order.is_draft = False
+            order.is_confirm = True
+
+    def action_set_draft(self):
+        for order in self:
+            order.is_draft = True
+            order.is_confirm = False
 
     @api.depends('order_line.quantity', 'order_line.unit_price', 'order_line.discount')
     def _compute_summary(self):
@@ -38,3 +52,20 @@ class MyOrderLine(models.Model):
     quantity = fields.Float(string='Quantity', default=1.0)
     unit_price = fields.Float(string='Unit Price', default=0.0)
     discount = fields.Float(string='Discount %', default=0.0)
+
+    is_confirm = fields.Boolean(string='Is Confirmed', related='order_id.is_confirm', store=True)
+    is_draft = fields.Boolean(string='Is Draft', related='order_id.is_draft', store=True)
+
+    @api.model
+    def create(self, vals):
+        order = self.env['my.order'].browse(vals.get('order_id'))
+        if order.is_confirm:
+            raise UserError("Error")
+        return super().create(vals)
+
+
+    def unlink(self):
+        for line in self:
+            if line.order_id.is_confirm:
+                raise UserError("Error")
+        return super().unlink()
