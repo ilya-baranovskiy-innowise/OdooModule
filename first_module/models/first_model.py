@@ -61,9 +61,9 @@ class FirstModel(models.Model):
     target_datetime = fields.Datetime(string='Target datetime')
 
     # related fields
-    currency_id = fields.Many2one('res.currency', string='Currency')
-    line_ids = fields.One2many('first.model.line', 'first_model_id', string='Lines')
-    tag_ids = fields.Many2many('first.model.tag', string='Tags')
+    currency_id = fields.Many2one(comodel_name='res.currency', string='Currency')
+    line_ids = fields.One2many(comodel_name='first.model.line', inverse_name='first_model_id', string='Lines')
+    tag_ids = fields.Many2many(comodel_name='first.model.tag', string='Tags')
 
     # binary fields
     binary = fields.Binary(string='Binary')
