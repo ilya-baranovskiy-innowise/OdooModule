@@ -1,15 +1,16 @@
 {
-    'name': "First Module",
+    'name': "L3 Module",
     'version': '1.0',
-    'depends': ['base'],
+    'depends': ['base', 'sale', 'stock', 'sale_stock'],
     'author': "Ilya",
     'category': 'Category',
     'description': """
     Description text
     """,
     'data': [
-        'views/first_view.xml',
-        'views/wizard_view.xml',
+        'views/res_partner_view.xml',
+        'views/sale_extend_view.xml',
+        'views/stock_picking_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,

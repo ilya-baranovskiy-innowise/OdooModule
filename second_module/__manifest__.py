@@ -1,5 +1,5 @@
 {
-    'name': "First Module",
+    'name': "SECOND Module",
     'version': '1.0',
     'depends': ['base'],
     'author': "Ilya",
@@ -8,8 +8,7 @@
     Description text
     """,
     'data': [
-        'views/first_view.xml',
-        'views/wizard_view.xml',
+        'views/order_view.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,

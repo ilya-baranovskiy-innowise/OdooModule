@@ -4,40 +4,110 @@
         <field name="model">first.model</field>
         <field name="arch" type="xml">
             <form string="First Model Form">
+                <header>
+                    <button name="action_create_person" type="object" string="Create Person" class="oe_highlight" invisible="person_show"/>
+                    <button name="action_create_company" type="object" string="Create Company" class="oe_highlight" invisible="company_show"/>
+                    <button name="action_create_partner" type="object" string="Create Partner" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <group>
-                        <field name="text"/>
+                        <field name="text" readonly="1"/>
                         <field name="check1"/>
                         <field name="check2"/>
+                        <field name="is_company"/>
                         <field name="check_all"/>
                         <field name="select1"/>
                         <field name="select2"/>
                     </group>
                     <group string="Booleans">
-                        <field name="boolean1"/>
-                        <field name="boolean2"/>
-                        <field name="boolean3"/>
-                        <field name="boolean4"/>
-                        <field name="boolean5"/>
-                        <field name="boolean6"/>
-                        <field name="boolean7"/>
-                        <field name="boolean8"/>
-                        <field name="boolean9"/>
+                        <field name="boolean1" invisible="show_boolean1"/>
+                        <field name="boolean2" invisible="show_boolean2"/>
+                        <field name="boolean3" invisible="show_boolean3"/>
+                        <field name="boolean4" invisible="show_boolean4"/>
+                        <field name="boolean5" invisible="show_boolean5"/>
+                        <field name="boolean6" invisible="show_boolean6"/>
+                        <field name="boolean7" invisible="show_boolean7"/>
+                        <field name="boolean8" invisible="show_boolean8"/>
+                        <field name="boolean9" invisible="show_boolean9"/>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="action_first_model_form" model="ir.actions.act_window">
+    <record id="view_first_model_kanban" model="ir.ui.view">
+        <field name="name">first.model.kanban</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+                            <field name="text"/>
+                            <div>
+                                <field name="check_all"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_first_model_list" model="ir.ui.view">
+        <field name="name">first.model.list</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <list string="First Model List">
+                <field name="text"/>
+                <field name="check_all"/>
+                <field name="boolean1"/>
+                <field name="boolean2"/>
+                <field name="boolean3"/>
+                <field name="boolean4"/>
+
+            </list>
+        </field>
+    </record>
+
+    <record id="view_first_model_pivot" model="ir.ui.view">
+        <field name="name">first.model.pivot</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <pivot string="First Model Pivot">
+                <field name="check1" type="row"/>
+                <field name="boolean1" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_first_model_graph" model="ir.ui.view">
+        <field name="name">first.model.graph</field>
+        <field name="model">first.model</field>
+        <field name="arch" type="xml">
+            <graph string="First Model Graph" type="bar">
+                <field name="check_all" type="row"/>
+                <field name="check1" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_first_model" model="ir.actions.act_window">
         <field name="name">First Model</field>
         <field name="res_model">first.model</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="view_first_model_form"/>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="view_ids" eval="[
+        (5, 0, 0),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_first_model_kanban')}),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('view_first_model_list')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('view_first_model_form')}),
+        (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_first_model_pivot')}),
+        (0, 0, {'view_mode': 'graph', 'view_id': ref('view_first_model_graph')}),
+    ]"/>
         <field name="target">current</field>
     </record>
 
     <menuitem id="menu_first_model_root" name="First Model"/>
-
-    <menuitem id="menu_first_model_form" name="Open Form" parent="menu_first_model_root" action="action_first_model_form"/>
+    <menuitem id="menu_first_model_kanban" name="Kanban View" parent="menu_first_model_root"
+              action="action_first_model"/>
 </odoo>
